@@ -1,4 +1,4 @@
-//***** IMPLMENTED USING
+//***** IMPLEMENTED USING
 //                Three.js 105 Library
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/controls/OrbitControls.js';
 
@@ -13,10 +13,10 @@ camera.lookAt(0, 250, 0);
 
 const geometry = new THREE.Geometry();
 const vertices = [
-    new THREE.Vector3(22.5, 0, 22.5),
-    new THREE.Vector3(22.5, 0, -22.5),
-    new THREE.Vector3(-22.5, 0, -22.5),
-    new THREE.Vector3(-22.5, 0, 22.5),
+    new THREE.Vector3(27.5, 0, 27.5),
+    new THREE.Vector3(27.5, 0, -27.5),
+    new THREE.Vector3(-27.5, 0, -27.5),
+    new THREE.Vector3(-27.5, 0, 27.5),
     new THREE.Vector3(17, 500, 17),
     new THREE.Vector3(17, 500, -17),
     new THREE.Vector3(-17, 500, -17),
