@@ -1,0 +1,368 @@
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-300, 300, 300, -300, 1, 1000);
+camera.position.z = 5;
+const renderer = new THREE.WebGLRenderer({
+  antialias: true
+});
+renderer.setSize(800, 800);
+document.body.appendChild(renderer.domElement);
+
+const material = new THREE.MeshBasicMaterial({
+  color: 0xA4C2CC
+});
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('https://media.istockphoto.com/id/1365132896/vector/subtle-smooth-gradient-sunset-background.jpg?s=612x612&w=0&k=20&c=rNJ0PmwxjiDjFsQMOf3XpseZS8rjusdtVgdajdtZtu4=');
+materialT = new THREE.MeshBasicMaterial({
+  map: texture,
+  transparent: true,
+  alphaTest: 0.5
+});
+const texture2 = textureLoader.load('https://i.swncdn.com/media/800w/via/images/2023/11/16/33652/33652-gettyimages-1427748072_source_file.jpg');
+materialT2 = new THREE.MeshBasicMaterial({
+  map: texture2,
+  transparent: false,
+  alphaTest: 0.5
+});
+
+const planeGeometry = new THREE.PlaneGeometry(600, 600);
+const plane = new THREE.Mesh(planeGeometry, materialT);
+scene.add(plane);
+plane.position.z = -1;
+
+let grass, treetop, trunk, mountain1, mountain2, mountain3, treetop2;
+let planeGroup, sun, circleGroup, star, bird;
+let birdGroup;
+
+function grassBlades() {
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xc3d4c4
+  });
+  const planeGeometry = new THREE.PlaneGeometry(2, 40);
+  const numberOfPlanes = 120;
+  planeGroup = new THREE.Group();
+  let w = -350;
+  for (let i = 0; i < numberOfPlanes; i++) {
+    const plane = new THREE.Mesh(planeGeometry, material);
+    plane.position.set(w, -70, 0);
+    w += 6;
+    planeGroup.add(plane);
+  }
+  scene.add(planeGroup);
+}
+
+function grassFunc() {
+  const frontGrass = new THREE.PlaneGeometry(800, 275);
+  const materialGrass = new THREE.MeshBasicMaterial({
+    color: 0xfffafa
+  });
+  grass = new THREE.Mesh(frontGrass, materialGrass);
+  scene.add(grass);
+  grass.position.y = -212.5;
+}
+
+function treetopFunc() {
+  const vertices2 = [
+    new THREE.Vector3(150, -140, 0),
+    new THREE.Vector3(75, 40, 0),
+    new THREE.Vector3(0, -140, 0)
+  ];
+  const vertices3 = [
+    new THREE.Vector3(150, -100, 0),
+    new THREE.Vector3(75, 60, 0),
+    new THREE.Vector3(0, -100, 0)
+  ];
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x228B22
+  });
+
+  const triangleGeometry2 = new THREE.Geometry();
+  triangleGeometry2.vertices = vertices2;
+  triangleGeometry2.faces.push(new THREE.Face3(0, 1, 2));
+
+  const triangleGeometry3 = new THREE.Geometry();
+  triangleGeometry3.vertices = vertices3;
+  triangleGeometry3.faces.push(new THREE.Face3(0, 1, 2));
+
+  treetop = new THREE.Mesh(triangleGeometry2, material);
+  treetop2 = new THREE.Mesh(triangleGeometry3, material);
+
+  scene.add(treetop);
+  scene.add(treetop2);
+}
+
+function trunkFunc() {
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x964B00
+  });
+  const planeGeometry = new THREE.PlaneGeometry(40, 50);
+  trunk = new THREE.Mesh(planeGeometry, material);
+  scene.add(trunk);
+  trunk.position.y = -160;
+  trunk.position.x = 75;
+}
+
+function getRandomColorMaterial() {
+  const randomColor = Math.random() * 0xffffff;
+  const material = new THREE.MeshBasicMaterial({
+    color: randomColor
+  });
+  return material;
+}
+
+function mountain1Func() {
+  const vertices2 = [
+    new THREE.Vector3(-300, -120, 0),
+    new THREE.Vector3(0, -120, 0),
+    new THREE.Vector3(-150, 100, 0)
+  ];
+
+  const triangleGeometry2 = new THREE.Geometry();
+  triangleGeometry2.vertices = vertices2;
+  triangleGeometry2.faces.push(new THREE.Face3(0, 1, 2));
+
+  mountain1 = new THREE.Mesh(triangleGeometry2, getRandomColorMaterial());
+  scene.add(mountain1);
+}
+
+function mountain2Func() {
+  const vertices2 = [
+    new THREE.Vector3(300, -120, 0),
+    new THREE.Vector3(0, -120, 0),
+    new THREE.Vector3(150, 100, 0)
+  ];
+
+  const triangleGeometry2 = new THREE.Geometry();
+  triangleGeometry2.vertices = vertices2;
+  triangleGeometry2.faces.push(new THREE.Face3(0, 2, 1));
+
+  mountain2 = new THREE.Mesh(triangleGeometry2, getRandomColorMaterial());
+  scene.add(mountain2);
+}
+
+function mountain3Func() {
+  const vertices2 = [
+    new THREE.Vector3(300, -120, 0),
+    new THREE.Vector3(-300, -120, 0),
+    new THREE.Vector3(0, 200, 0)
+  ];
+
+  const triangleGeometry2 = new THREE.Geometry();
+  triangleGeometry2.vertices = vertices2;
+  triangleGeometry2.faces.push(new THREE.Face3(0, 2, 1));
+
+  mountain3 = new THREE.Mesh(triangleGeometry2, getRandomColorMaterial());
+  scene.add(mountain3);
+}
+
+function sunFunc() {
+  sun = new THREE.Group();
+
+  const numLines = 48;
+  const lineLength = 40;
+
+  for (let i = 0; i < numLines; i++) {
+    const angle = (i / numLines) * Math.PI * 2;
+    const x = Math.cos(angle) * 2;
+    const y = Math.sin(angle) * 2;
+
+    const lineGeometry = new THREE.Geometry();
+    lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    lineGeometry.vertices.push(new THREE.Vector3(x * lineLength, y * lineLength, 0));
+
+    const line = new THREE.Line(lineGeometry, new THREE.LineBasicMaterial({
+      color: 0xffd700
+    }));
+    sun.add(line);
+  }
+
+  const circleGeometry = new THREE.CircleGeometry(100, 30);
+  const texture2 = textureLoader.load('https://www.usatoday.com/gcdn/-mm-/33e11a65ff360d421db8dc4e003e0708e3487038/c=77-0-1930-1393/local/-/media/2014/12/24/USATODAY/USATODAY/635550185008280337-day122414x011.jpg');
+  materialT2 = new THREE.MeshBasicMaterial({
+    map: texture2,
+    transparent: false,
+    alphaTest: 0.5
+  });
+  const circle = new THREE.Mesh(circleGeometry, materialT2);
+  circle.position.x = 200;
+  circle.position.y = 200;
+  circle.position.z = -.5;
+  sun.add(circle);
+
+  scene.add(sun);
+  sun.position.x = 200;
+  sun.position.y = 200;
+}
+
+function orniments() {
+  circleGroup = new THREE.Group();
+
+  function createCircle(x, y, radius, segments, color) {
+    const geometry = new THREE.CircleGeometry(radius, segments);
+    const material = new THREE.MeshBasicMaterial({
+      color: color
+    });
+    const circle = new THREE.Mesh(geometry, material);
+    circle.position.set(x, y, 0);
+    circleGroup.add(circle);
+  }
+  createCircle(100, -120, 11, 32, 0x9b1c31);
+  createCircle(80, -35, 11, 32, 0xFFD700);
+  createCircle(55, -90, 11, 32, 0xc0c0c0);
+  createCircle(40, -50, 11, 32, 0x9b1c31);
+  createCircle(30, -110, 11, 32, 0xFFD700);
+  createCircle(100, -70, 11, 32, 0xc0c0c0);
+  createCircle(70, -0, 11, 32, 0x9b1c31);
+  scene.add(circleGroup);
+}
+
+function starFunc() {
+  star = new THREE.Group();
+
+  const numLines = 24;
+  const lineLength = 10;
+
+  for (let i = 0; i < numLines; i++) {
+    const angle = (i / numLines) * Math.PI * 2;
+    const x = Math.cos(angle) * 2;
+    const y = Math.sin(angle) * 2;
+
+    const lineGeometry = new THREE.Geometry();
+    lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    lineGeometry.vertices.push(new THREE.Vector3(x * lineLength, y * lineLength, 0));
+
+    const line = new THREE.Line(lineGeometry, new THREE.LineBasicMaterial({
+      color: 0xFFD700
+    }));
+    star.add(line);
+  }
+
+  scene.add(star);
+  star.position.x = 75;
+  star.position.y = 60;
+  star.position.z = 1;
+}
+
+function birdFunc() {
+  birdGroup = new THREE.Group();
+
+  for (let i = 0; i < 5; i++) {
+    const bird = new THREE.Group();
+
+    const circleGeometry = new THREE.CircleGeometry(7, 30);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xC41E3A
+    });
+    const circle = new THREE.Mesh(circleGeometry, material);
+    circle.position.x = 0;
+    circle.position.y = 0;
+
+    const geometry = new THREE.PlaneGeometry(20, 8);
+    const rectangle = new THREE.Mesh(geometry, material);
+    const rectangle2 = new THREE.Mesh(geometry, material);
+
+    rectangle.position.x = 20;
+    rectangle.position.y = 0;
+    rectangle.rotation.z = Math.PI / 5;
+    rectangle2.rotation.z = Math.PI / -5;
+
+    circle.position.x = 10;
+    circle.position.y = -10;
+
+    bird.add(circle);
+    bird.add(rectangle);
+    bird.add(rectangle2);
+
+    bird.position.x = 50 * (i + 1);
+    bird.position.y = 10 * (i + 1);
+    birdGroup.add(bird);
+  }
+
+  scene.add(birdGroup);
+}
+
+sunFunc();
+mountain3Func();
+mountain1Func();
+mountain2Func();
+birdFunc();
+grassFunc();
+grassBlades();
+trunkFunc();
+treetopFunc();
+orniments();
+starFunc();
+
+let originalPositions = {};
+
+function storeOriginalPositions() {
+  originalPositions = {
+    mountain1: mountain1.position.clone(),
+    mountain2: mountain2.position.clone(),
+    mountain3: mountain3.position.clone(),
+    grass: grass.position.clone(),
+    trunk: trunk.position.clone(),
+    planeGroup: planeGroup.position.clone(),
+    sun: sun.position.clone(),
+    treetop: treetop.position.clone(),
+    treetop2: treetop2.position.clone(),
+    circleGroup: circleGroup.position.clone(),
+    star: star.position.clone()
+  };
+}
+
+storeOriginalPositions();
+
+function animate(event) {
+  requestAnimationFrame(() => animate(event));
+
+  if (event) {
+    const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+    const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    sun.position.x = originalPositions.sun.x + mouseX * 5;
+    sun.position.y = originalPositions.sun.y + mouseY * 5;
+
+    mountain3.position.x = originalPositions.mountain3.x + mouseX * 10;
+    mountain3.position.y = originalPositions.mountain3.y + mouseY * 10;
+
+    mountain2.position.x = originalPositions.mountain2.x + mouseX * 20;
+    mountain2.position.y = originalPositions.mountain2.y + mouseY * 20;
+
+    mountain1.position.x = originalPositions.mountain1.x + mouseX * 20;
+    mountain1.position.y = originalPositions.mountain1.y + mouseY * 20;
+
+    grass.position.x = originalPositions.grass.x + mouseX * 30;
+    grass.position.y = originalPositions.grass.y + mouseY * 30;
+
+    trunk.position.x = originalPositions.trunk.x + mouseX * 30;
+    trunk.position.y = originalPositions.trunk.y + mouseY * 30;
+
+    treetop.position.x = originalPositions.treetop.x + mouseX * 30;
+    treetop.position.y = originalPositions.treetop.y + mouseY * 30;
+    treetop2.position.x = originalPositions.treetop.x + mouseX * 30;
+    treetop2.position.y = originalPositions.treetop.y + mouseY * 30;
+
+    planeGroup.position.x = originalPositions.planeGroup.x + mouseX * 30;
+    planeGroup.position.y = originalPositions.planeGroup.y + mouseY * 30;
+    circleGroup.position.x = originalPositions.planeGroup.x + mouseX * 30;
+    circleGroup.position.y = originalPositions.planeGroup.y + mouseY * 30;
+    star.position.x = originalPositions.star.x + mouseX * 30;
+    star.position.y = originalPositions.star.y + mouseY * 30;
+
+    sun.rotation.z += 0.0001;
+    star.rotation.z -= 0.1;
+
+    birdGroup.position.x += 0.01;
+
+    const screenWidth = 800;
+    if (birdGroup.position.x > screenWidth / 2) {
+      birdGroup.position.x = -600;
+    }
+
+    renderer.render(scene, camera);
+  }
+}
+
+animate();
+
+window.addEventListener('mousemove', animate);
